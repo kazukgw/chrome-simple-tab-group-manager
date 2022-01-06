@@ -4,7 +4,7 @@
 
 <main>
   <div id="title">
-    <h1>Simple Tab Group Saver</h1>
+    <h1>Simple Tab Group Manager</h1>
   </div>
   <TabGroupsColumn />
 </main>

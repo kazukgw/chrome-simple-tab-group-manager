@@ -7,11 +7,14 @@ export interface TabInfo {
 
 export interface TabGroupInfo extends chrome.tabGroups.TabGroup {
   tabs: TabInfo[];
+  savedAt: number;
 }
 
 export class TabGroups {
   async getInactives(): Promise<{ [key: string]: TabGroupInfo }> {
-    let inactives: { [key: string]: any } = await chrome.storage.local.get(null);
+    let inactives: { [key: string]: any } = await chrome.storage.local.get(
+      null
+    );
     inactives = inactives as { [key: string]: TabGroupInfo };
     if (inactives == null) {
       return {};
@@ -41,7 +44,8 @@ export class TabGroups {
       })
       .map((t): TabInfo => {
         let _url = t.url;
-        if (/^chrome/.test(t.url)) {
+        const ptn = new RegExp(`^chrome-extension:\/\/${chrome.runtime.id}`);
+        if (ptn.test(t.url)) {
           const url = new URL(t.url);
           const params = url.searchParams;
           const b64info = params.get("info");
@@ -55,6 +59,7 @@ export class TabGroups {
           title: t.title,
         };
       });
+    tginfo.savedAt = new Date().getTime();
 
     await chrome.storage.local.set({ [tgid]: tginfo });
 

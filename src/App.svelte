@@ -12,7 +12,7 @@
 <style lang="scss">
 
 :global(body){
-  width: 220px;
+  width: 270px;
   margin: 0;
   padding: 0;
   border-radius: 3px 3px 3px 3px;

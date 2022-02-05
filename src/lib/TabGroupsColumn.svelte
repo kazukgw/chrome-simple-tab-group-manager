@@ -6,12 +6,80 @@
 
   let actives: TabGroupInfo[] = [];
   let inactives: TabGroupInfo[] = [];
+  let filteredActives: TabGroupInfo[] = [];
+  let filteredInactives: TabGroupInfo[] = [];
+  let filteredAll: TabGroupInfo[] = [];
+
+  let filterValue = "";
+
+  let selectedIndex = null;
+  let selectedTabGroupInfoId = null;
+
+  function sortfn(l: TabGroupInfo, r: TabGroupInfo) {
+    return (r.savedAt || 0) - (l.savedAt || 0);
+  }
+
+  function filtering() {
+    selectedIndex = null;
+    selectedTabGroupInfoId = null;
+    filteredActives = actives.filter((tginfo)=> { return tginfo.title.includes(filterValue) })
+    filteredInactives = inactives.filter((tginfo)=> { return tginfo.title.includes(filterValue) })
+    filteredAll = filteredActives.concat(filteredInactives);
+  }
+
+  function handleKeydown(e) {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      changeSelected(e);
+    }
+    if (e.key === "Enter") {
+      updateTabGroupStatus();
+    }
+  }
+
+  function changeSelected(e) {
+    if(e.key === "ArrowUp") {
+      if(selectedIndex == null) {
+        selectedIndex = filteredAll.length - 1;
+      } else if(selectedIndex < 1) {
+        selectedIndex = 0;
+      }
+      else {
+        selectedIndex = selectedIndex - 1;
+      }
+    } else if(e.key === "ArrowDown") {
+      if(selectedIndex == null) {
+        selectedIndex = 0
+      } else if(selectedIndex >= filteredAll.length - 1) {
+        selectedIndex = filteredAll.length - 1;
+      } else {
+        selectedIndex = selectedIndex + 1;
+      }
+    }
+    selectedTabGroupInfoId = filteredAll[selectedIndex].id;
+  }
 
   async function reset() {
     const a = await tabgroups.getActives();
-    actives = Object.values(a);
+    actives = Object.values(a).sort(sortfn);
     const i = await tabgroups.getInactives()
-    inactives = Object.values(i);
+    inactives = Object.values(i).sort(sortfn);
+    filtering()
+  }
+
+  function updateTabGroupStatus() {
+    const selectedTabGroup = filteredAll[selectedIndex];
+    if(selectedTabGroup == null) {
+      return;
+    }
+    if(selectedTabGroup.savedAt == null) {
+      tabgroups.deactivateTabGroup(selectedTabGroup.id + "").then(()=>{
+        reset();
+      });
+    } else {
+      tabgroups.activateTabGroup(selectedTabGroup.id + "").then(()=>{
+        reset();
+      });
+    }
   }
 
   function deactivate(ev) {
@@ -38,11 +106,17 @@
   reset();
 </script>
 
+<svelte:window on:keydown={handleKeydown}/>
+
+<div class="filter">
+  <input autofocus type="text" bind:value={filterValue} on:input={filtering}>
+</div>
+
 <div>
   <div class="tglist">
-    {#each actives as tg}
+    {#each filteredActives as tg}
       <div class="tab-group-container">
-        <div id="{tg.id}" class="tab-group" on:click={deactivate}>
+        <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''}" on:click={deactivate}>
           <div class="circle color-{tg.color}"></div>
           <div class="tab-group-title">{tg.title}</div>
         </div>
@@ -51,9 +125,9 @@
   </div>
 
   <div class="tglist">
-    {#each inactives as tg}
+    {#each filteredInactives as tg}
       <div class="tab-group-container">
-        <div id="{tg.id}" class="tab-group dark" on:click={activate}>
+        <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''} dark" on:click={activate}>
           <div class="circle color-{tg.color}"></div>
           <div class="tab-group-title">{tg.title}</div>
         </div>
@@ -65,6 +139,19 @@
 </div>
 
 <style lang="scss">
+
+.filter {
+  input[type="text"]:focus {
+    outline: none;
+  }
+  input[type="text"] {
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid gray;
+  }
+}
 
 .color-grey   { background-color: #bec1c5 }
 .color-blue   { background-color: #94b3f2 }
@@ -117,6 +204,11 @@
   border-color: #c9c9c9;
 }
 
+.tab-group.selected {
+  border: 1px solid;
+  border-color: #c9c9c9;
+}
+
 .circle {
   display: inline-block;
   width: 14px;
@@ -127,7 +219,7 @@
 }
 
 .tab-group-title {
-  width: 150px;
+  width: 200px;
   display: inline-block;
   vertical-align: middle;
   text-overflow: ellipsis;

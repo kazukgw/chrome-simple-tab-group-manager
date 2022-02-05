@@ -108,37 +108,44 @@
 
 <svelte:window on:keydown={handleKeydown}/>
 
-<div class="filter">
-  <input autofocus type="text" bind:value={filterValue} on:input={filtering}>
-</div>
+<div id="tabgroupscolumn">
 
-<div>
-  <div class="tglist">
-    {#each filteredActives as tg}
-      <div class="tab-group-container">
-        <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''}" on:click={deactivate}>
-          <div class="circle color-{tg.color}"></div>
-          <div class="tab-group-title">{tg.title}</div>
-        </div>
-      </div>
-    {/each}
+  <div class="filter">
+    <input autofocus type="text" bind:value={filterValue} on:input={filtering}>
   </div>
 
-  <div class="tglist">
-    {#each filteredInactives as tg}
-      <div class="tab-group-container">
-        <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''} dark" on:click={activate}>
-          <div class="circle color-{tg.color}"></div>
-          <div class="tab-group-title">{tg.title}</div>
+  <div>
+    <div class="tglist">
+      {#each filteredActives as tg}
+        <div class="tab-group-container">
+          <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''}" on:click={deactivate}>
+            <div class="circle color-{tg.color}"></div>
+            <div class="tab-group-title">{tg.title}</div>
+          </div>
         </div>
-        <div data-tgid="{tg.id}" class="icon-box close-button" on:click={remove}><span class="icon-close"></span></div>
-      </div>
-    {/each}
-  </div>
+      {/each}
+    </div>
 
+    <div class="tglist">
+      {#each filteredInactives as tg}
+        <div class="tab-group-container">
+          <div id="{tg.id}" class="tab-group {selectedTabGroupInfoId === tg.id ? 'selected': ''} dark" on:click={activate}>
+            <div class="circle color-{tg.color}"></div>
+            <div class="tab-group-title">{tg.title}</div>
+          </div>
+          <div data-tgid="{tg.id}" class="icon-box close-button" on:click={remove}><span class="icon-close"></span></div>
+        </div>
+      {/each}
+    </div>
+
+  </div>
 </div>
 
 <style lang="scss">
+
+#tabgroupscolumn {
+  width: 270px;
+}
 
 .filter {
   input[type="text"]:focus {
@@ -161,6 +168,7 @@
 .color-pink   { background-color: #ee92c8 }
 .color-purple { background-color: #cfb1f6 }
 .color-cyan   { background-color: #92d8e9 }
+.color-orange { background-color: #efaf7a }
 
 .tglist {
   margin: 8px 0;

@@ -7,4 +7,5 @@ export enum ColorCode {
   pink = "#ee92c8",
   purple = "#cfb1f6",
   cyan = "#92d8e9",
+  orange = "#efaf7a",
 }

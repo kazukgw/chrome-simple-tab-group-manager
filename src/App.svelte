@@ -1,22 +1,38 @@
 <script lang="ts">
   import TabGroupsColumn from './lib/TabGroupsColumn.svelte'
+  import TabGroupsPage from './lib/TabGroupsPage.svelte'
+
+  const url = new URL(window.location);
+  const mode = url.searchParams.get("mode");
+
+  function createPagesTab() {
+    chrome.tabs.create({
+      url: "index.html?mode=page",
+      active: true,
+    });
+  }
 </script>
 
 <main>
   <div id="title">
-    <h1>Simple Tab Group Manager</h1>
+  {#if mode === "page"}
+    <h1 class="h1large">Simple Tab Group Manager</h1>
+  {:else}
+    <h1 on:click={createPagesTab}>Simple Tab Group Manager</h1>
+  {/if}
   </div>
-  <TabGroupsColumn />
+  {#if mode === "page"}
+    <TabGroupsPage />
+  {:else}
+    <TabGroupsColumn />
+  {/if}
 </main>
 
 <style lang="scss">
 
 :global(body){
-  width: 270px;
   margin: 0;
   padding: 0;
-  border-radius: 3px 3px 3px 3px;
-  border-color: gray;
   font-family: "Lato","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
 }
 
@@ -29,10 +45,16 @@
   color: white;
   background-color: #f00048;
   padding: 2px;
+  cursor: pointer;
 
   h1 {
     text-align: center;
     font-size: 12px;
+  }
+
+  h1.h1large {
+    text-align: center;
+    font-size: 20px;
   }
 }
 

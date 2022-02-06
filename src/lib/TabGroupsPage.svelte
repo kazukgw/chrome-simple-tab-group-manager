@@ -99,13 +99,14 @@
 </script>
 
 <div id="tabgroupspage">
-  <div>
+  <div class="action-box">
+    <h2> Action </h2>
     <p on:click={copyAsMarkdown} class="action-button"> Copy as markdown {copyAsMarkdownMessage} </p>
     <p on:click={copyInactivesAsJSON} class="action-button"> Copy inactives as JSON {copyInactivesAsJSONMessage} </p>
     <p on:click={importJSONFromClipboard} class="action-button"> Import JSON from clipboard {importJSONFromClipboardMessage} </p>
   </div>
   <div class="tglist">
-    <h1> Actives </h1>
+    <h1> Active </h1>
     {#each actives as tg}
       <div class="tab-group-container">
         <div>
@@ -123,12 +124,12 @@
   </div>
 
   <div class="tglist dark">
-    <h1 class="dark"> Inactives </h1>
+    <h1 class="dark"> Inactive </h1>
     {#each inactives as tg}
       <div class="tab-group-container">
         <div>
           <div class="circle color-{tg.color}"></div>
-          <div class="tg-title"> {tg.title}</div>
+          <div class="tg-title"> {tg.title} <span class="tg-savedat">({new Date(tg.savedAt).toLocaleString()})</span> </div>
         </div>
 
         {#each tg.tabs as tab}
@@ -163,7 +164,7 @@
 }
 
 
-h1 {
+h1, h2 {
   color: #383838;
   text-decoration: underline;
 }
@@ -208,12 +209,26 @@ img.link-icon {
   }
 }
 
+.action-box {
+  background-color: #f0bc00;
+  border-radius: 5px;
+  padding: 1px 0 10px 10px;
+  margin: 8px 0 0 0px;
+}
+
 .action-button {
   cursor: pointer;
   font-size: 15px;
-  margin: 10px;
+  margin: 5px;
   text-decoration: underline;
 }
+
+.tg-savedat {
+  font-size: 15px;
+  color: #888888;
+}
+
+
 
 .color-grey   { background-color: #bec1c5 }
 .color-blue   { background-color: #94b3f2 }

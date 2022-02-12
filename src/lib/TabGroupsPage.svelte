@@ -228,8 +228,6 @@ img.link-icon {
   color: #888888;
 }
 
-
-
 .color-grey   { background-color: #bec1c5 }
 .color-blue   { background-color: #94b3f2 }
 .color-red    { background-color: #e38f86 }

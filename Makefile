@@ -1,2 +1,2 @@
 copy:
-	cp -r dist /home/developer/tmp/chrome-tab-group-saver
+	cp -r dist /home/devenv/tmp/chrome-tab-group-saver

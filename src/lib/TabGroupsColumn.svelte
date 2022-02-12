@@ -22,8 +22,8 @@
   function filtering() {
     selectedIndex = null;
     selectedTabGroupInfoId = null;
-    filteredActives = actives.filter((tginfo)=> { return tginfo.title.includes(filterValue) })
-    filteredInactives = inactives.filter((tginfo)=> { return tginfo.title.includes(filterValue) })
+    filteredActives = actives.filter((tginfo)=> { return !!tginfo.title.match(new RegExp(filterValue, "i")) })
+    filteredInactives = inactives.filter((tginfo)=> { return !!tginfo.title.match(new RegExp(filterValue, "i")) })
     filteredAll = filteredActives.concat(filteredInactives);
   }
 

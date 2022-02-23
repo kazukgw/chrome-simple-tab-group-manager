@@ -12,6 +12,16 @@
     "default_popup": "index.html",
     "default_icon": "stgs-logo.png"
   },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "windows": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E",
+        "chromeos": "Ctrl+Shift+E",
+        "linux": "Ctrl+Shift+E"
+      }
+    }
+  },
   "manifest_version": 3
 }
 
